@@ -1,0 +1,25 @@
+type Query {
+    trucks(id: ID): [Truck!]!
+    drivers(id: ID): [Driver!]!
+}
+
+type Truck {
+    id: ID!
+    model: String!
+}
+
+type Driver {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    birthDate: String
+    license: License
+}
+
+type License {
+    displayName: String!
+    type: LicenseType!
+}
+enum LicenseType {
+    A, B, C, D, E
+}
