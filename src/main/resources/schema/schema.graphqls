@@ -9,6 +9,12 @@ type Truck {
     cost: String!
     power: String!
     tankSize: String!
+    deliveryArea: [Point!]
+}
+
+type Point {
+    latitude: Float!
+    longitude: Float!
 }
 
 type Driver {

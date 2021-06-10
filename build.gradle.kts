@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.xunfosechunfos"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.3-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {

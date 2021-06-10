@@ -1,6 +1,7 @@
 package com.xunfosechunfos.dojotruckerdb.data
 
 import com.xunfosechunfos.dojotruckerdb.common.parseToRows
+import com.xunfosechunfos.dojotruckerdb.model.types.Point
 import com.xunfosechunfos.dojotruckerdb.model.types.Truck
 import org.springframework.stereotype.Repository
 import org.springframework.util.ResourceUtils
@@ -36,6 +37,12 @@ class TruckRepository {
                     cost = cost,
                     power = power,
                     tankSize = tankSize,
+                    deliveryArea = listOf(
+                        Point(latitude = 53.4169, longitude=9.7040),
+                        Point(latitude = 54.4169, longitude=10.7040),
+                        Point(latitude = 55.4169, longitude=11.7040),
+                        Point(latitude = 53.4169, longitude=9.7040),
+                    )
                 )
             }
             .forEach { repository[it.id] = it }
