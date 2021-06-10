@@ -29,8 +29,14 @@ class TruckRepository {
             .readText()
             .parseToRows()
             .map {
-                val (id, model) = it.split("|")
-                Truck(id = id, model = model)
+                val (id, model, cost, power, tankSize) = it.split("|")
+                Truck(
+                    id = id,
+                    model = model,
+                    cost = cost,
+                    power = power,
+                    tankSize = tankSize,
+                )
             }
             .forEach { repository[it.id] = it }
         logger.info("${repository.size} Trucks loaded successfully")

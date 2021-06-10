@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.spring") version "1.5.10"
     id("com.netflix.dgs.codegen") version "4.6.6"
+    id("com.google.cloud.tools.jib") version "3.1.0"
+
 }
 
 group = "com.xunfosechunfos"

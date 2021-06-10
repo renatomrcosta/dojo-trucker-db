@@ -6,6 +6,9 @@ type Query {
 type Truck {
     id: ID!
     model: String!
+    cost: String!
+    power: String!
+    tankSize: String!
 }
 
 type Driver {
