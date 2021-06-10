@@ -16,12 +16,12 @@ class QueryHandler(
 ) {
 
     @DgsQuery
-    fun trucks(@InputArgument id: UUID?): List<Truck> {
-        return truckRepository.list().filter { id == null || it.id == id.toString() }
+    fun trucks(@InputArgument id: String?): List<Truck> {
+        return truckRepository.list().filter { id == null || it.id == id }
     }
 
     @DgsQuery
-    fun drivers(@InputArgument id: UUID?): List<Driver> {
-        return driverRepository.list().filter { id == null || it.id == id.toString() }
+    fun drivers(@InputArgument id: String?): List<Driver> {
+        return driverRepository.list().filter { id == null || it.id == id }
     }
 }
