@@ -1,16 +1,66 @@
 package com.xunfosechunfos.dojotruckerdb
 
 import com.netflix.graphql.dgs.DgsQueryExecutor
+import com.netflix.graphql.dgs.client.DefaultGraphQLClient
+import com.netflix.graphql.dgs.client.HttpResponse
+import com.netflix.graphql.dgs.client.RequestExecutor
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
+import org.springframework.web.client.RestTemplate
+import java.util.*
+import kotlin.collections.HashMap
+
+@Configuration
+class ConfigTests {
+    @Bean
+    fun restTemplate() = RestTemplate()
+}
 
 @SpringBootTest
 class TestQuery {
 
     @Autowired
     private lateinit var queryExecutor: DgsQueryExecutor
+
+    @Autowired
+    private lateinit var restTemplate: RestTemplate
+
+    @Test
+    fun shouldCallUsingHTTP() {
+        val client = DefaultGraphQLClient("http://localhost:8080/graphql")
+
+        val response = client.executeQuery("""
+            {
+                trucks {
+                    id
+                    model
+                    cost
+                    power
+                }
+            }
+        """.trimIndent(), emptyMap()) { url, headers, body ->
+            // This configuration is necessary because the DGS client is client agnostic.
+            val requestHeaders = HttpHeaders()
+            headers.forEach { requestHeaders[it.key] = it.value }
+
+            val exchange =
+                restTemplate.exchange(url, HttpMethod.POST, HttpEntity(body, requestHeaders), String::class.java)
+
+            HttpResponse(exchange.statusCodeValue, exchange.body)
+        }
+
+        println(response)
+        val wrapper = response.dataAsObject(MyTruckWrapper::class.java)
+        wrapper.trucks.forEach { println(it) }
+    }
 
     @Test
     fun shouldFetchAllTrucksUsingExecute() {
@@ -29,7 +79,7 @@ class TestQuery {
         // This does not work properly, giving back a list of LinkedHashMap instead... I might be missing some config for serialization, but this seems like a classic type erasure shenanigan
 //        val trucks = result.getData<List<MyTruck>>()
         // Therefore, I manually deserialize the list:
-        val data = result.getData<HashMap<String, List<HashMap<String,String>
+        val data = result.getData<HashMap<String, List<HashMap<String, String>
                 >>>()
         val trucks = data["trucks"]?.map { it.toMyTruck() } ?: error("no trucks found")
         Assertions.assertEquals(100, trucks.size)
@@ -86,3 +136,4 @@ private fun HashMap<String, String>.toMyTruck(): MyTruck = MyTruck(
 
 data class MyTruck(val id: String, val model: String, val cost: String, val power: String)
 
+data class MyTruckWrapper(val trucks: List<MyTruck>)
