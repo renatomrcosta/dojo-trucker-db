@@ -35,6 +35,7 @@ class TestQuery {
 
     @Test
     fun shouldCallUsingHTTP() {
+        // This test only passes when your local is running the service. This is meant as a code sample for Hoppers
         val client = DefaultGraphQLClient("http://localhost:8080/graphql")
 
         val response = client.executeQuery("""
